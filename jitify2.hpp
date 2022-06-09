@@ -1965,6 +1965,7 @@ class DynamicLibrary {
     lib_.reset(::dlopen(name, RTLD_LAZY));
     if (!lib_) {
       error_ = ::dlerror();
+      std::cerr << "COULD NOT LOAD " << name << " : " << error_ << std::endl;
       return false;
     }
 #endif
@@ -2009,15 +2010,11 @@ class LibNvrtc
         "libnvrtc.so." + major_str;
 #endif
     if (!this->open(libname.c_str())) {
-      // Fall back to a brute-force search over minor versions.
-      for (int minor = 9; minor >= 0; --minor) {
 #if defined(_WIN32) || defined(_WIN64)
-        // TODO: Why does the filename have _0 on the end (not in docs)?
-        libname = "nvrtc64_" + major_str + std::to_string(minor) + "_0.dll";
+        libname = "nvrtc64.dll";
 #else
-        libname = "libnvrtc.so." + major_str + "." + std::to_string(minor);
+        libname = "libnvrtc.so";
 #endif
-        if (this->open(libname.c_str())) break;
       }
     }
 #endif  // !JITIFY_LINK_NVRTC_STATIC
