@@ -2015,7 +2015,6 @@ class LibNvrtc
 #else
         libname = "libnvrtc.so";
 #endif
-      }
     }
 #endif  // !JITIFY_LINK_NVRTC_STATIC
   }
